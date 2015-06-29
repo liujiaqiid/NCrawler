@@ -55,7 +55,7 @@ exports.getDepartmentListByHospitalId = function (hos) {
 };
 
 exports.getDepartmentId = function (index) {
-  return Department.find({}, "id name provinceId provinceName hospitalId hospitalName").exec();
+  return Department.find({}, "_id id name provinceId provinceName hospitalId hospitalName").exec();
 };
 
 /**
@@ -85,8 +85,11 @@ exports.parseAndStore = function (json){
   console.log("content:" + content);
   if (content.length > 0){
     content = _.forEach(content, function(d){
-    return _.extend(d, {hospitalId: id,hospitalName: json.hospital.name, provinceName: json.hospital.provinceName, provinceId: json.hospital.provinceId});
-   });
+      return _.extend(d, {hospitalId: id,
+        hospitalName: json.hospital.name,
+        provinceName: json.hospital.provinceName,
+        provinceId: json.hospital.provinceId});
+    });
 
     return Department.create(content)
       .then(function (result) {

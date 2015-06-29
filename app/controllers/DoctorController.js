@@ -103,26 +103,29 @@ exports.find = function (con, fields){
   return Doctor.find(con, fields).exec();
 };
 
-exports.getDoctorListByDiseaseKey = function (key, relation) {
+exports.findOne = function (con, fields){
+  return Doctor.findOne(con, fields).exec();
+};
+
+exports.getDoctorListByDiseaseKey = function (key, relation, province) {
   var deferred = Q.defer();
   var path = HDF.getDoctorListByDiseaseKey;
   var queryString =
     _.reduce(
-      _.map(_.extend(HDF.query, {diseaseKey: key,pageSize:10000, pageId:1,province:'四川'}),
+      _.map(_.extend(HDF.query, {diseaseKey: key,pageSize:10000, pageId:1,province: province}),
         function (value, key) {
           return key + "=" + value;
-        }),
-      function (memo, value) {
-        return memo + "&" + value;
-      });
+        }),function (memo, value) {
+          return memo + "&" + value;
+        });
   var url = HDF.host + path + queryString;
 
   console.log("QueryString: " + url);
   request(
     {
-      method: 'GET'
-      , uri: url
-      , gzip: true
+      method: 'GET',
+      uri: url,
+      gzip: true
     },
     function (error, response, body) {
 

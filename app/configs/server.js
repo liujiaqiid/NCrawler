@@ -20,7 +20,8 @@ module.exports = {
   dbUrl_test: 'mongodb://localhost/zlyweb',
 
   //dbUrl: NODE_ENV == 'production' ? dbUrl_production : NODE_ENV == 'test' ? dbUrl_ut : dbUrl_test,
-  dbUrl: NODE_ENV == 'production' ? dbUrl_production : NODE_ENV == 'test' ? dbUrl_ut : NODE_ENV == 'hdf' ? hdf_test :dbUrl_test,
+  //dbUrl: NODE_ENV == 'production' ? dbUrl_production : NODE_ENV == 'test' ? dbUrl_ut : NODE_ENV == 'hdf' ? hdf_test :dbUrl_test,
+  dbUrl: 'mongodb://182.92.81.107/hdf',
   port: 3000,
   secret: 'wecare',
 

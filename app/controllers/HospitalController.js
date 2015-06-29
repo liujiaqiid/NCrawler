@@ -55,7 +55,7 @@ exports.getHospitalListByProvince = function (province) {
 };
 
 exports.getHospitalId = function () {
-  return Hospital.find({}, "id name provinceId province provinceName ").exec();
+  return Hospital.find({}, "_id id name provinceId province provinceName").exec();
 };
 
 /**
@@ -64,15 +64,17 @@ exports.getHospitalId = function () {
  * @returns {*}
  */
 exports.parseAndStore = function (json){
+
   console.log("Begin data parse and store function. " + json.length);
   var deferred = Q.defer();
   var raw = JSON.parse(json.body);
   var province = json.province;
   var rawContent = raw.content;
+
   console.log(util.inspect(province));
   rawContent = _.each(rawContent, function(d){
-  return _.extend(d,{provinceName:province.name, provinceId: province.id});
- });
+    return _.extend(d,{provinceName:province.name, provinceId: province.id});
+  });
 
   console.log("content:" + rawContent.length);
   if (rawContent.length > 0){
@@ -121,4 +123,3 @@ exports.create = function(spl){
 //    }
 //  ]
 //}
-

@@ -18,7 +18,6 @@ module.exports = {
   {"id":"5509080d8faee0fbe0c4a6e9","name":"香港特别行政区",   "alias":"香港"},
   {"id":"5509080d8faee0fbe0c4a6ea","name":"澳门特别行政区",   "alias":"澳门"},
  */
-{"id":"5509080d8faee0fbe0c4a6df","name":"四川省",   "alias":"四川"}
+ {"id":"5509080d8faee0fbe0c4a6df","name":"四川省", "alias":"四川"}
  ]
 };
-

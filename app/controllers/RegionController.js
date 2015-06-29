@@ -13,13 +13,14 @@ exports.find = function(hos){
  return Region.find({name:name}).exec()
  .then(function(r){
    if(!r){
-    console.log("*******No this region******");
+    console.log("*******Err: No this region : ******" + name);
     deferred.resolve("");
    };
 
    deferred.resolve({body: r[0], hos:hos});
    return deferred.promise;
  }, function(err){
+   console.log("!!!Err: " + err);
    deferred.reject(err);
    return deferred.promise;
  });
