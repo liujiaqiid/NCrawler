@@ -21,16 +21,16 @@ var
   HOSIDS = require('./app/configs/distinctDocId.js').HosIDS,
   Region = require('./app/models/Region.js');
 
-var privinceId = "5509080d8faee0fbe0c4a6e0";
+var privinceId = "5509080d8faee0fbe0c4a6df";
 var province = {
-    "id" : "5509080d8faee0fbe0c4a6e0",
+    "_id" : "5509080d8faee0fbe0c4a6df",
     "createdAt" : 1426655247511,
     "updatedAt" : 1426655247511,
     "isDeleted" : false,
-    "type" : 1.0000000000000000,
-    "areaId" : "520000",
-    "name" : "贵州省",
-    "alias" : "贵州"
+    "type" : 1,
+    "areaId" : "510000",
+    "name" : "四川省",
+    "alias" : "四川"
 };
 
 console.log("Crawler Begin Working....");
@@ -42,7 +42,9 @@ console.log("Crawler Begin Working....");
 /**
  * 1. 查询并存储全国所有的医院  Hospital
  * Tip:  将PROVINCELIST[i]修改为对应省得信息
-
+ *
+ * 四川  131
+ *
 Hospital.getHospitalListByProvince(province)    //? 需要在此步骤中关省市信息？？？？？？？
   .then(function(data){
     console.log("Finish get data.");
@@ -77,6 +79,7 @@ Hospital.getHospitalListByProvince(province)    //? 需要在此步骤中关省�
         }
 
         var hos = hosList[i];
+        var id = idsArr[i];
         //通过医院的id来查询医院科室信息
         Department.getDepartmentListByHospitalId(hos)
         .then(function (data) {
@@ -88,7 +91,8 @@ Hospital.getHospitalListByProvince(province)    //? 需要在此步骤中关省�
 
           console.log("Finish parse and store data."+id);
         }, function (err) {
-          console.log("oooo:" + err);
+
+          console.log("!!!Err: " + err);
         });
 
       })(i++);
@@ -101,11 +105,11 @@ Hospital.getHospitalListByProvince(province)    //? 需要在此步骤中关省�
 /**
  * 3. 查询所有科室医生列表--医生基本信息  DoctorList
  *   每四秒 call 一次hdf api，防治ip被封锁
- *
+ */
 
 Department.getDepartmentId()
   .then(function (depts) {
-    //var idsArr = _.pluck(ids, 'id');
+
     depts = JSON.parse(JSON.stringify(depts));
     console.log("##### " + depts.length);
 
@@ -121,15 +125,16 @@ Department.getDepartmentId()
         }
 
         var dept = depts[i];
+
         DoctorList.getDoctorListByDepartmentId(dept)
           .then(function (data) {
-            console.log("Finish get data.");
+            console.log("Finish get data." + i);
             return DoctorList.parseAndStore(data, data.departmentId);
           })
           .then(function () {
             console.log("Finish parse and store data.");
           }, function (err) {
-            console.log("oooo:" + err);
+            console.log(i + "!!!Err: " + err);
           });
 
       })(i++);
@@ -138,7 +143,7 @@ Department.getDepartmentId()
 
   });
 
-*/
+//*/
 
 /**
  * 4. 查询所有医生详情   Doctor
@@ -601,14 +606,14 @@ Region.find({type:2,"provinceId" : privinceId}).exec()
 
 /***
 
-//mongoexport --host 182.92.81.107 --port 27017 -d hdf -c indexes -q "{}" --csv --out ./indexes.csv --fields _id,source,type,provinceId,provinceName,districtId,districtName,name,gps,grade,isDeleted,updatedAt,createdAt,hdfId,district,doctorCount,featuredFaculties,caseDoctorCount,bookingDoctorCount
+//mongoexport --host API2 --port 27017 -d hdf -c indexes -q "{}" --csv --out ./indexes.csv --fields _id,source,type,provinceId,provinceName,districtId,districtName,name,gps,grade,isDeleted,updatedAt,createdAt,hdfId,district,doctorCount,featuredFaculties,caseDoctorCount,bookingDoctorCount
 //mongoimport --host localhost --port 27017 --db zlyweb --collection indexes --type csv --headerline --file ./indexes.csv
 
 //107
 mongodump -d hdf -c indexes -o ./tmp/
 mongodump -d hdf -c profiles -o ./tmp/
 
-scp -r zlycare@182.92.81.107:~/tmp ./
+scp -r zlycare@API2:~/tmp ./
 
 //DB3
 mongorestore -d zlyweb -c indexes ./tmp/hdf/indexes.bson
