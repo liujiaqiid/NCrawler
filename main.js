@@ -201,7 +201,7 @@ DoctorList.getId()
  * Tip:修改Doctor.getDoctorListByDiseaseKey 方法querySring的privince为相应地省份或者直辖市
  * 直辖市，例如：北京市，去掉-市
  * 省份，例如：山东省，去掉-省
- */
+ *
 //Step1: 获取所有的疾病列表
 DiseaseController.getDiseaseList()
   .then(function(list){
@@ -258,7 +258,7 @@ DiseaseController.getDiseaseList()
 
   }, 100);
   });
-//*/
+*/
 
 /**
  * 11. 新增北京索引
@@ -275,15 +275,16 @@ Index.create([{
 "type" : 1
 }]);
 
-{
-    "_id" : ObjectId("5509080d8faee0fbe0c4a6e0"),
-    "createdAt" : 1426655247511.0000000000000000,
-    "updatedAt" : 1426655247511.0000000000000000,
+var province = {
+    "_id" : "5509080d8faee0fbe0c4a6df",
+    "createdAt" : 1426655247511,
+    "updatedAt" : 1426655247511,
     "isDeleted" : false,
-    "type" : 1.0000000000000000,
-    "areaId" : "520000",
-    "name" : "贵州省"
-}
+    "type" : 1,
+    "areaId" : "510000",
+    "name" : "四川省",
+    "alias" : "四川"
+};
 */
 
 
@@ -296,7 +297,7 @@ Index.create([{
 /*
 db.doctors.update(
 {func:0},
-{$set: {func:2, provinceId: "5509080d8faee0fbe0c4a6e0", provinceName:"贵州"}},
+{$set: {func:2, provinceId: "5509080d8faee0fbe0c4a6df", provinceName:"四川"}},
 {multi:true});
 */
 
@@ -389,6 +390,11 @@ Department.find({}, fields)
     }
     //console.log("List: " + util.inspect(newList));
     Index.create(newList);
+  })
+  .then(function(){
+    console.log("Success");
+  },function(err){
+    console.log("!!!!!!!Err:"+err);
   });
 
 */
@@ -400,18 +406,33 @@ Department.find({}, fields)
  * 1. 在doctor集合中查询 func=2(地点索引的医生)的 hdf医生id
  * 2. 遍历所有医生的hdf ID, 查询并转存到profile表
  *
- *
+ */
 
 Doctor.getDisDoctorIds('doctorId',{func:2})
   .then(function(dosIds){
 
     //_.values(dosIds);//DISTINCTDOCIDS);
     dosIds = dosIds || [];
-    console.log("Begin: " + dosIds);
-    dosIds.forEach(function(d){
+    console.log("Begin: " + dosIds.length);
+
+    var i = 0 ;
+
+
+    var timer = setInterval(function(){
+
+    (function(i){
+
+      if( i >= dosIds.length){
+       console.log("Game over...");
+       clearInterval(timer);
+       return;
+      }
+
+      var d = dosIds[i];
 
       Doctor.findOne({doctorId: d, func:2})
         .then(function(doc){
+
           if (!doc) return;
           var doctor = JSON.parse(JSON.stringify(doc));
           var profile = {};
@@ -448,18 +469,21 @@ Doctor.getDisDoctorIds('doctorId',{func:2})
           profile.doctorId = doctor.doctorId || "";
 
          return Doctor.CreateProfile(profile);
-
        })
-       .then(function(d){
+       .then(function(){
          console.log("Create Success!")
        }, function (err){
          console.log("!!!Err: " + err)
        });
 
-     });
+    })(i++)
+
+
+  }, 1500);
+
  });
 
-*/
+//*/
 
 
 /**
