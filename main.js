@@ -22,6 +22,7 @@ var
   Region = require('./app/models/Region.js');
 
 var privinceId = "5509080d8faee0fbe0c4a6df";
+var provinceName = "四川";
 var province = {
     "_id" : "5509080d8faee0fbe0c4a6df",
     "createdAt" : 1426655247511,
@@ -105,7 +106,7 @@ Hospital.getHospitalListByProvince(province)    //? 需要在此步骤中关省�
 /**
  * 3. 查询所有科室医生列表--医生基本信息  DoctorList
  *   每四秒 call 一次hdf api，防治ip被封锁
- */
+ *
 
 Department.getDepartmentId()
   .then(function (depts) {
@@ -143,7 +144,7 @@ Department.getDepartmentId()
 
   });
 
-//*/
+*/
 
 /**
  * 4. 查询所有医生详情   Doctor
@@ -200,7 +201,7 @@ DoctorList.getId()
  * Tip:修改Doctor.getDoctorListByDiseaseKey 方法querySring的privince为相应地省份或者直辖市
  * 直辖市，例如：北京市，去掉-市
  * 省份，例如：山东省，去掉-省
- *
+ */
 //Step1: 获取所有的疾病列表
 DiseaseController.getDiseaseList()
   .then(function(list){
@@ -232,7 +233,7 @@ DiseaseController.getDiseaseList()
         diseaseName: list[i].name
       };
 
-      Doctor.getDoctorListByDiseaseKey(key, relation, "贵州")
+      Doctor.getDoctorListByDiseaseKey(key, relation, provinceName)
         .then(function (result){
           var doctorList = (JSON.parse(result.data)).content;
           var relation = result.relation;
@@ -257,7 +258,7 @@ DiseaseController.getDiseaseList()
 
   }, 100);
   });
-*/
+//*/
 
 /**
  * 11. 新增北京索引
