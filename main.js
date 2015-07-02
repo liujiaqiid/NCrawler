@@ -406,7 +406,7 @@ Department.find({}, fields)
  * 1. 在doctor集合中查询 func=2(地点索引的医生)的 hdf医生id
  * 2. 遍历所有医生的hdf ID, 查询并转存到profile表
  *
- */
+ *
 
 Doctor.getDisDoctorIds('doctorId',{func:2})
   .then(function(dosIds){
@@ -483,7 +483,7 @@ Doctor.getDisDoctorIds('doctorId',{func:2})
 
  });
 
-//*/
+*/
 
 
 /**
@@ -500,16 +500,29 @@ Doctor.getDisDoctorIds('doctorId',{func:2})
  *  3. 查询医院对应的 科室信息
  *  4. 更新科室对应的医生信息
  *
- *
+ */
 
 Hospital.find({},'_id id district')
   .then(function(hospitals){
     console.log(hospitals.length);
-    hospitals.forEach(function(hospital){
 
-      //console.log(hospital);
+    var i = 0 ;
+
+    var timer = setInterval(function(){
+
+    (function(i){
+
+      if( i >= hospitals.length){
+       console.log("Game over...");
+       clearInterval(timer);
+       return;
+      }
+
+      var hospital = hospitals[i];
+
       RegionController.find(hospital)
         .then(function(region){
+
           var body = region.body;
           var districId = body._id;
           var districtName = body.name;
@@ -544,10 +557,15 @@ Hospital.find({},'_id id district')
          }, function (err){
            console.log("!!!Err3 : " + err);
          });
-       });
+
+
+    })(i++)
+
+  }, 5000);
+
 });
 
-*/
+//*/
 
 /**
  * 查找func = 1[疾病索引出来]的医生信息，然后更新对应profile表relatedDisease字段
