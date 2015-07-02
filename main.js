@@ -500,7 +500,7 @@ Doctor.getDisDoctorIds('doctorId',{func:2})
  *  3. 查询医院对应的 科室信息
  *  4. 更新科室对应的医生信息
  *
- */
+ *
 
 Hospital.find({},'_id id district')
   .then(function(hospitals){
@@ -565,7 +565,7 @@ Hospital.find({},'_id id district')
 
 });
 
-//*/
+*/
 
 /**
  * 查找func = 1[疾病索引出来]的医生信息，然后更新对应profile表relatedDisease字段
@@ -574,15 +574,29 @@ Hospital.find({},'_id id district')
  * 2. 查询医生的主治疾病
  * 3. 更新医生的主治字段
  *
- *
+ */
 
 var i = 0;
 Doctor.getDisDoctorIds('doctorId',{func:1})
   .then(function(docs){
 
     console.log(" *******Distinct Doc length:"+ docs.length);
-    _.values(docs).forEach(function(id){
+
+    var i = 0 ;
+
+    var timer = setInterval(function(){
+
+    (function(i){
+
+      if( i >= hospitals.length){
+       console.log("Game over...");
+       clearInterval(timer);
+       return;
+      }
+
+      var id = docs[i];
       console.log(id);
+
       return Doctor.find({doctorId: id, func:1})
         .then(function(doctors){
 
@@ -600,7 +614,7 @@ Doctor.getDisDoctorIds('doctorId',{func:1})
 
           return Doctor.updateDoctorProfileRelatedDisease({doctorId:doc.doctorId},data)
            .then(function(d){
-             ++i;
+             //++i;
              console.log("Add RelatedDisease Success!"+ i);
           }, function(err){
             console.log("!!!!Err1 : " + err);
@@ -609,11 +623,16 @@ Doctor.getDisDoctorIds('doctorId',{func:1})
       }, function (err) {
         console.log("!!!!Err2 : " + err);
       });
-    });
+
+    })(i++)
+
+  }, 5000);
+
 }, function (err) {
   console.log("!!!!Err3 : " + err);
 });
-*/
+
+//*/
 
 /**
  *
